@@ -1,17 +1,14 @@
-from langdetect import detect                                     # 언어 감지
 import torch
 from transformers import PreTrainedTokenizerFast                  # 한국어 제목
 from transformers import BartForConditionalGeneration             # 한국어 제목
 from transformers import T5ForConditionalGeneration, T5Tokenizer  # 영어 제목
 
 
-def generate_title(text):
+def generate_title(text, lang):
     if text == "error1" or "error2":  # 요약 실패
         headline = None
 
-    lang = detect(text)               # 입력된 언어 감지
-
-    if lang == 'en':                  # 감지된 언어 영어
+    if lang == 'en':                  # 감지된 언어 영어 -> 영어 제목 생성
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         model = T5ForConditionalGeneration.from_pretrained("Michau/t5-base-en-generate-headline")
@@ -32,7 +29,7 @@ def generate_title(text):
             early_stopping=True,
         )
         headline = tokenizer.decode(headline_ids[0], skip_special_tokens=True)
-    elif lang == 'ko':                # 감지된 언어 한국어
+    elif lang == 'ko':                # 감지된 언어 한국어 -> 한국어 제목 생성
         headline_model = BartForConditionalGeneration.from_pretrained('yebini/kobart-headline-gen')
         headline_tokenizer = PreTrainedTokenizerFast.from_pretrained('yebini/kobart-headline-gen')
 
