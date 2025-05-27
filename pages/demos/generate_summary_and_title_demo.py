@@ -9,12 +9,15 @@ from utils.language import detect_language            # 언어 감지
 def run():
     st.title("📝 본문 요약문 및 제목 생성 Demo")
 
-    input_mode = st.radio("입력 방식을 선택하세요", ("URL 입력", "직접 입력"), horizontal=True)
+    st.sidebar.header('세부사항 선택')
+    input_mode = st.sidebar.selectbox("입력 방식 선택", ("URL 입력", "직접 입력"))
 
     text = ""
 
     if input_mode == "URL 입력":
-        url = st.text_input("URL을 입력하세요", placeholder="예: https://www.example.com/article/...")
+        url = st.text_input("URL을 입력하세요",
+                            help="url 입력 후 enter를 누르면 본문 길이와 감지된 언어가 표시됩니다",
+                            placeholder="예: https://www.example.com/article/...")
         if url.strip():
             try:
                 with st.spinner("본문 추출 중입니다..."):
@@ -22,26 +25,23 @@ def run():
             except ValueError as e:
                 st.error(str(e))
 
-        st.write("공백 포함 본문 길이(enter로 반영)", len(text))
-
     elif input_mode == "직접 입력":
-        text = st.text_area("뉴스 본문을 입력하세요", placeholder="여기에 본문을 직접 입력하세요", height=300)
-        st.write("공백 포함 본문 길이(ctrl+enter로 반영)", len(text))
+        text = st.text_area("뉴스 본문을 입력하세요",
+                            help="본문 입력 후 ctrl+enter를 누르면 본문 길이와 감지된 언어가 표시됩니다",
+                            placeholder="여기에 본문을 직접 입력하세요", height=300)
 
     if text.strip():
         lang = detect_language(text)
-        st.write("감지된 언어: ", lang)
+        st.write(f"공백 포함 본문 길이: `{len(text)}` | 감지된 언어: `{lang}`")
     else:
         lang = "unknown"
 
     if 0 < len(text) < 100:
         st.warning("입력 길이가 너무 짧습니다 (권장 길이: 100~1000자)")
 
-
-    length_option = st.radio(
-        "요약문 길이를 선택하세요",
+    length_option = st.sidebar.selectbox(
+        "요약문 길이 선택",
         ("짧게 (약 100~300자)", "중간 (약 200~400자)", "길게 (약 400~600자)"),
-        horizontal=True
     )
 
     if length_option == "짧게 (약 100~300자)":
@@ -69,6 +69,6 @@ def run():
                     st.error("지원하는 언어가 아닙니다 (지원 언어: 영어, 한국어)")
                 else:
                     st.success("✅ 생성 완료 !")
-                    st.write(title)
+                    st.write(f"**{title}**")
                     st.write(summary)
-                    st.write("공백 포함 요약문 길이", len(summary))
+                    st.write(f"공백 포함 요약문 길이: `{len(summary)}`")
