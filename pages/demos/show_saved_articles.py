@@ -1,4 +1,6 @@
 import streamlit as st
+from utils.article_memory import manage_saved_articles
+from utils.classify_topic import get_topic
 
 
 def run():
@@ -13,12 +15,7 @@ def run():
     lang = st.sidebar.selectbox('언어 선택', ['전체', '한국어', '영어'])
     lang_map = {'전체': None, '한국어': 'ko', '영어': 'en'}
     selected_lang = lang_map[lang]
-    selected_topic = st.sidebar.selectbox('분야 선택',
-                                 ['전체', 'education', 'human interest', 'society', 'sport', 'crime, law and justice',
-                                  'disaster, accident and emergency incident', 'arts, culture, entertainment and media',
-                                  'politics',
-                                  'economy, business and finance', 'lifestyle and leisure', 'science and technology',
-                                  'health', 'labour', 'religion', 'weather', 'environment', 'conflict, war and peace'])
+    selected_topic = st.sidebar.selectbox('분야 선택', ["전체"]+get_topic())
 
     def filter_condition(article, lang, topic):
         # 언어 필터 적용
@@ -41,14 +38,4 @@ def run():
     else:
         st.write(f"총 {len(filtered_articles)}개의 기사 결과")
         for article in filtered_articles:
-            with st.container(border=True):
-                st.write(f"**{article['title']}**")
-                st.write(article['summary'])
-                st.write(f"분야: `{article['topic']}` | 언어: `{article['lang']}`")
-
-                article_key = f"delete_{hash(article['title'] + article['summary'])}"
-                delete_button = st.button(label="삭제", key=article_key, use_container_width=True)
-                if delete_button:
-                    st.session_state.generated_articles.remove(article)
-                    st.rerun()
-
+            manage_saved_articles(article)

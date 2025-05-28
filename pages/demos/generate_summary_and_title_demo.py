@@ -65,7 +65,7 @@ def run():
             with st.spinner("생성 중입니다..."):
                 summary = summary_news(text, lang, summary_min, summary_max)
                 title = generate_title(summary, lang)
-                topic = detect_topic(summary)
+                topic = detect_topic(text if len(text) <= 512 else summary)
                 try:
                     save_article(title, summary, topic, lang)
                 except Exception as e:

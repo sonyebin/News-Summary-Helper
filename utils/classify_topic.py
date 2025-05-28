@@ -18,3 +18,12 @@ def detect_topic(text):
     classifier = load_classifier()
     result = classifier(text)[0]["label"]
     return result
+
+
+def get_topic():
+    topic = ['education', 'human interest', 'society', 'sport', 'crime, law and justice',
+             'disaster, accident and emergency incident', 'arts, culture, entertainment and media',
+             'politics', 'economy, business and finance', 'lifestyle and leisure', 'science and technology',
+             'health', 'labour', 'religion', 'weather', 'environment', 'conflict, war and peace']
+
+    return topic
