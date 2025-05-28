@@ -2,7 +2,7 @@ import streamlit as st
 
 
 # 생성된 요약 결과들 세션에 저장
-def save_article(title, summary, topic, lang):
+def save_article(title: str, summary: str, topic:str, lang:str) -> None:
     if title is None:  # 정상적으로 생성된 요약문만 저장되도록
         return
 
@@ -10,8 +10,8 @@ def save_article(title, summary, topic, lang):
         st.session_state.generated_articles = []
 
     st.session_state.generated_articles.append({
-        "title": title,
-        "summary": summary,
+        "title": title.strip(),
+        "summary": summary.strip(),
         "topic": topic,
         "lang": lang
     })
