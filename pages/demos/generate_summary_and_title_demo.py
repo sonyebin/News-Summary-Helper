@@ -66,7 +66,10 @@ def run():
                 summary = summary_news(text, lang, summary_min, summary_max)
                 title = generate_title(summary, lang)
                 topic = detect_topic(summary)
-                save_article(title, summary, topic, lang)
+                try:
+                    save_article(title, summary, topic, lang)
+                except Exception as e:
+                    st.info(f"기사 자동 저장에 실패하였습니다 ({e})")
                 if summary == "error1":
                     st.error("언어 감지에 실패하였습니다 (지원 언어: 영어, 한국어)")
                 elif summary == "error2":

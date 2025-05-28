@@ -40,13 +40,15 @@ def run():
         st.info("조건에 맞는 기사가 없습니다.")
     else:
         st.write(f"총 {len(filtered_articles)}개의 기사 결과")
-        for idx, article in enumerate(filtered_articles):
+        for article in filtered_articles:
             with st.container(border=True):
                 st.write(f"**{article['title']}**")
                 st.write(article['summary'])
                 st.write(f"분야: `{article['topic']}` | 언어: `{article['lang']}`")
 
-                delete_button = st.button(label="삭제", key=idx, use_container_width=True)
+                article_key = f"delete_{hash(article['title'] + article['summary'])}"
+                delete_button = st.button(label="삭제", key=article_key, use_container_width=True)
                 if delete_button:
                     st.session_state.generated_articles.remove(article)
                     st.rerun()
+

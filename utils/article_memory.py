@@ -9,6 +9,11 @@ def save_article(title: str, summary: str, topic:str, lang:str) -> None:
     if "generated_articles" not in st.session_state:
         st.session_state.generated_articles = []
 
+    # 기사 중복 저장 방지
+    for article in st.session_state.generated_articles:
+        if article["title"] == title.strip() and article["summary"] == summary.strip():
+            return
+
     st.session_state.generated_articles.append({
         "title": title.strip(),
         "summary": summary.strip(),
